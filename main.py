@@ -94,7 +94,7 @@ def createColums(dataList):
         columns.append(CarouselColumn(
                 thumbnail_image_url=imgbox.select_one("img").get('data-src'),
                 title=detail.select_one('a').getText().split(' ',1)[0],
-                text=detail.select_one('a').getText().split(' ',1)[1],
+                text=text,
                 actions=[
                     URIAction(
                         label="熱血開尻",
