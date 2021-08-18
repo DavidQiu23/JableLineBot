@@ -87,6 +87,10 @@ def createColums(dataList):
     for item in dataList:
         imgbox = item.find('div', attrs={'class':'img-box cover-md'})
         detail = item.find('div', attrs={'class':'detail'})
+        text = detail.select_one('a').getText().split(' ',1)[1]
+
+        if(len(text)>60):
+            text = text[:56]+"...."
         columns.append(CarouselColumn(
                 thumbnail_image_url=imgbox.select_one("img").get('data-src'),
                 title=detail.select_one('a').getText().split(' ',1)[0],
