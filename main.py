@@ -10,7 +10,7 @@ from linebot.models import (
     MessageEvent, TextMessage, TextSendMessage,CarouselColumn,URIAction,TemplateSendMessage,CarouselTemplate
 )
 
-import requests,os,cloudscraper
+import os,cloudscraper
 from bs4 import BeautifulSoup
 
 app = Flask(__name__)
@@ -44,11 +44,9 @@ def callback():
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
     print("TextEven")
-    headers = {'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:92.0) Gecko/20100101 Firefox/92.0'}
+    scraper = cloudscraper.create_scraper()
     if(event.message.text == "義旻我要最新的車"):
-        scraper = cloudscraper.create_scraper()
-        response = requests.get("https://jable.tv/latest-updates/", headers=headers)
-        print(scraper.get("https://jable.tv/latest-updates/").text)
+        response = scraper.get("https://jable.tv/latest-updates/")
         soup = BeautifulSoup(response.text, "html.parser")
         dataList = soup.find_all('div', attrs={'class':'video-img-box mb-e-20'},limit=10)
     
@@ -60,7 +58,7 @@ def handle_message(event):
         message = [TextSendMessage(text="兄弟 記得要節制"),carousel_template_message]
         line_bot_api.reply_message(event.reply_token,message)
     elif(event.message.text == "義旻我要發燒列車"):
-        response = requests.get("https://jable.tv/hot/", headers=headers)
+        response = scraper.get("https://jable.tv/hot/")
         soup = BeautifulSoup(response.text, "html.parser")
         dataList = soup.find_all('div', attrs={'class':'video-img-box mb-e-20'},limit=10)
         
@@ -74,7 +72,7 @@ def handle_message(event):
         line_bot_api.reply_message(event.reply_token,message)
     elif(len(event.message.text.split(' ')) == 3):
         if(event.message.text.split(' ')[0] == "義旻我要"):
-            response = requests.get("https://jable.tv/search/"+event.message.text.split(' ')[1]+"/", headers=headers)
+            response = scraper.get("https://jable.tv/search/"+event.message.text.split(' ')[1]+"/")
             soup = BeautifulSoup(response.text, "html.parser")
             dataList = soup.find_all('div', attrs={'class':'video-img-box mb-e-20'},limit=10)
 
@@ -93,9 +91,6 @@ def createColums(dataList):
         imgbox = item.find('div', attrs={'class':'img-box cover-md'})
         detail = item.find('div', attrs={'class':'detail'})
         text = detail.select_one('a').getText().split(' ',1)[1]
-        print(imgbox)
-        print(detail)
-        print(text)
         if(len(text)>60):
             text = text[:56]+"...."
         columns.append(CarouselColumn(
