@@ -44,8 +44,9 @@ def callback():
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
     print("TextEven")
+    headers = {'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:92.0) Gecko/20100101 Firefox/92.0'}
     if(event.message.text == "義旻我要最新的車"):
-        response = requests.get("https://jable.tv/latest-updates/")
+        response = requests.get("https://jable.tv/latest-updates/", headers=headers)
         print(response.text)
         soup = BeautifulSoup(response.text, "html.parser")
         dataList = soup.find_all('div', attrs={'class':'video-img-box mb-e-20'},limit=10)
@@ -58,7 +59,7 @@ def handle_message(event):
         message = [TextSendMessage(text="兄弟 記得要節制"),carousel_template_message]
         line_bot_api.reply_message(event.reply_token,message)
     elif(event.message.text == "義旻我要發燒列車"):
-        response = requests.get("https://jable.tv/hot/")
+        response = requests.get("https://jable.tv/hot/", headers=headers)
         soup = BeautifulSoup(response.text, "html.parser")
         dataList = soup.find_all('div', attrs={'class':'video-img-box mb-e-20'},limit=10)
         
@@ -72,7 +73,7 @@ def handle_message(event):
         line_bot_api.reply_message(event.reply_token,message)
     elif(len(event.message.text.split(' ')) == 3):
         if(event.message.text.split(' ')[0] == "義旻我要"):
-            response = requests.get("https://jable.tv/search/"+event.message.text.split(' ')[1]+"/")
+            response = requests.get("https://jable.tv/search/"+event.message.text.split(' ')[1]+"/", headers=headers)
             soup = BeautifulSoup(response.text, "html.parser")
             dataList = soup.find_all('div', attrs={'class':'video-img-box mb-e-20'},limit=10)
 
