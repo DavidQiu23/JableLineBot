@@ -45,7 +45,7 @@ def callback():
 def handle_message(event):
     if(event.message.text == "義旻我要最新的車"):
         response = requests.get("https://jable.tv/latest-updates/")
-        soup = BeautifulSoup(response.text.replace(u'\u00a0', ' '), "html.parser")
+        soup = BeautifulSoup(response.text, "html.parser")
         dataList = soup.find_all('div', attrs={'class':'video-img-box mb-e-20'},limit=10)
     
         carousel_template_message = TemplateSendMessage(
@@ -88,7 +88,9 @@ def createColums(dataList):
         imgbox = item.find('div', attrs={'class':'img-box cover-md'})
         detail = item.find('div', attrs={'class':'detail'})
         text = detail.select_one('a').getText().split(' ',1)[1]
-
+        print(imgbox)
+        print(detail)
+        print(text)
         if(len(text)>60):
             text = text[:56]+"...."
         columns.append(CarouselColumn(
