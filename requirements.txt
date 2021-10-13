@@ -1,3 +1,5 @@
 line-bot-sdk
 flask
 bs4
+requests-toolbelt
+cloudscraper

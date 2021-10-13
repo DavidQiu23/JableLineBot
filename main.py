@@ -10,7 +10,7 @@ from linebot.models import (
     MessageEvent, TextMessage, TextSendMessage,CarouselColumn,URIAction,TemplateSendMessage,CarouselTemplate
 )
 
-import requests,os
+import requests,os,cloudscraper
 from bs4 import BeautifulSoup
 
 app = Flask(__name__)
@@ -46,8 +46,9 @@ def handle_message(event):
     print("TextEven")
     headers = {'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:92.0) Gecko/20100101 Firefox/92.0'}
     if(event.message.text == "義旻我要最新的車"):
+        scraper = cloudscraper.create_scraper()
         response = requests.get("https://jable.tv/latest-updates/", headers=headers)
-        print(response.text)
+        print(scraper.get("https://jable.tv/latest-updates/").text)
         soup = BeautifulSoup(response.text, "html.parser")
         dataList = soup.find_all('div', attrs={'class':'video-img-box mb-e-20'},limit=10)
     
