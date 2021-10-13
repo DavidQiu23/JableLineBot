@@ -46,6 +46,7 @@ def handle_message(event):
     print("TextEven")
     if(event.message.text == "義旻我要最新的車"):
         response = requests.get("https://jable.tv/latest-updates/")
+        print(response.text)
         soup = BeautifulSoup(response.text, "html.parser")
         dataList = soup.find_all('div', attrs={'class':'video-img-box mb-e-20'},limit=10)
     
