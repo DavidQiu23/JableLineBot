@@ -43,6 +43,7 @@ def callback():
 
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
+    print("TextEven")
     if(event.message.text == "義旻我要最新的車"):
         response = requests.get("https://jable.tv/latest-updates/")
         soup = BeautifulSoup(response.text, "html.parser")
@@ -83,6 +84,7 @@ def handle_message(event):
             line_bot_api.reply_message(event.reply_token,message)
 
 def createColums(dataList):
+    print("createColums")
     columns = []
     for item in dataList:
         imgbox = item.find('div', attrs={'class':'img-box cover-md'})
