@@ -45,7 +45,7 @@ def callback():
 def handle_message(event):
     if(event.message.text == "義旻我要最新的車"):
         response = requests.get("https://jable.tv/latest-updates/")
-        soup = BeautifulSoup(response.text.encode("utf-8").decode("utf-8","ignore"), "html.parser")
+        soup = BeautifulSoup(response.text.replace('\u00a0', ' '), "html.parser")
         dataList = soup.find_all('div', attrs={'class':'video-img-box mb-e-20'},limit=10)
     
         carousel_template_message = TemplateSendMessage(
