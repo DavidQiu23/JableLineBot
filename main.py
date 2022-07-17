@@ -100,7 +100,7 @@ def createColums(dataList):
                 actions=[
                     URIAction(
                         label="熱血開尻",
-                        uri=imgbox.select_one('a').get('href')
+                        uri=imgbox.select_one('a').get('href')+"?openExternalBrowser=1"
                     )
                 ]
         ))
