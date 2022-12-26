@@ -10,7 +10,7 @@ from linebot.models import (
     MessageEvent, TextMessage, TextSendMessage,CarouselColumn,URIAction,TemplateSendMessage,CarouselTemplate
 )
 
-import os,cloudscraper
+import os,cloudscraper,re
 from bs4 import BeautifulSoup
 
 app = Flask(__name__)
@@ -90,12 +90,12 @@ def createColums(dataList):
     for item in dataList:
         imgbox = item.find('div', attrs={'class':'img-box cover-md'})
         detail = item.find('div', attrs={'class':'detail'})
-        text = detail.select_one('a').getText().split(' ',1)[1]
+        text = re.match("([A-Za-z]+-\d+)(.+)",detail.select_one('a').getText()).group(2)
         if(len(text)>60):
             text = text[:56]+"...."
         columns.append(CarouselColumn(
                 thumbnail_image_url=imgbox.select_one("img").get('data-src'),
-                title=detail.select_one('a').getText().split(' ',1)[0],
+                title=re.match("([A-Za-z]+-\d+)(.+)",detail.select_one('a').getText()).group(1),
                 text=text,
                 actions=[
                     URIAction(
