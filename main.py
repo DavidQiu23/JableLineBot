@@ -89,7 +89,7 @@ def handle_message(event):
                       ,headers={f"Authorization":"Bearer {gpt_token}"})
         result = result.json()
         # message = [TextSendMessage(text=result["choices"][0]["message"]["content"])]
-        message = [TextSendMessage(text=result)]
+        message = [TextSendMessage(text=str(result))]
         line_bot_api.reply_message(event.reply_token,message)
 
 
