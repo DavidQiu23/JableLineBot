@@ -17,7 +17,6 @@ app = Flask(__name__)
 
 line_bot_api = LineBotApi(os.getenv("TOKEN"))
 handler = WebhookHandler(os.getenv("SECRET"))
-gpt_token = os.getenv("GPT")
 
 @app.route('/')
 def index():
@@ -85,11 +84,11 @@ def handle_message(event):
             message = [TextSendMessage(text=event.message.text.split(' ')[1]+"的片喔 我找找"),carousel_template_message]
             line_bot_api.reply_message(event.reply_token,message)
     else:
+        gpt_token = os.getenv("GPT")
         result = requests.post("https://api.openai.com/v1/chat/completions",data={"model": "gpt-3.5-turbo","messages": [{"role": "user", "content": event.message.text}]}
-                      ,headers={f"Authorization":"Bearer {gpt_token}"})
+                      ,headers={f"Authorization":"Bearer "+gpt_token})
         result = result.json()
-        # message = [TextSendMessage(text=result["choices"][0]["message"]["content"])]
-        message = [TextSendMessage(text=str(result))]
+        message = [TextSendMessage(text=result["choices"][0]["message"]["content"])]
         line_bot_api.reply_message(event.reply_token,message)
 
 
