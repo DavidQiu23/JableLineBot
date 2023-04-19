@@ -18,6 +18,8 @@ app = Flask(__name__)
 line_bot_api = LineBotApi(os.getenv("TOKEN"))
 handler = WebhookHandler(os.getenv("SECRET"))
 
+history = []
+
 @app.route('/')
 def index():
   return "hello world"
@@ -83,10 +85,14 @@ def handle_message(event):
                 ))
             message = [TextSendMessage(text=event.message.text.split(' ')[1]+"的片喔 我找找"),carousel_template_message]
             line_bot_api.reply_message(event.reply_token,message)
+    elif(event.message.text == "清除記憶"):
+        history = []
+        line_bot_api.reply_message(event.reply_token,"記憶已清除")
     else:
-        gpt_token = os.getenv("GPT")
-        result = requests.post("https://api.openai.com/v1/chat/completions",json={"model": "gpt-3.5-turbo","messages": [{"role": "user", "content": "測試!"}]},headers={"Authorization":"Bearer "+gpt_token})
+        history.append({"role": "user", "content": event.message.text})
+        result = requests.post("https://api.openai.com/v1/chat/completions",json={"model": "gpt-3.5-turbo","messages": history},headers={"Authorization":"Bearer "+os.getenv("GPT")})
         result = result.json()
+        history.append(result["choices"][0]["message"])
         message = [TextSendMessage(text=result["choices"][0]["message"]["content"])]
         line_bot_api.reply_message(event.reply_token,message)
 
