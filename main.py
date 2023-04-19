@@ -85,7 +85,7 @@ def handle_message(event):
             line_bot_api.reply_message(event.reply_token,message)
     else:
         gpt_token = os.getenv("GPT")
-        result = requests.post("https://api.openai.com/v1/chat/completions",data={"model": "gpt-3.5-turbo","messages": [{"role": "user", "content": event.message.text}]}
+        result = requests.post("https://api.openai.com/v1/chat/completions",json={"model": "gpt-3.5-turbo","messages": [{"role": "user", "content": event.message.text}]}
                       ,headers={"Authorization":"Bearer "+gpt_token})
         result = result.json()
         message = [TextSendMessage(text=str(result))]
