@@ -10,13 +10,14 @@ from linebot.models import (
     MessageEvent, TextMessage, TextSendMessage,CarouselColumn,URIAction,TemplateSendMessage,CarouselTemplate
 )
 
-import os,cloudscraper,re
+import os,cloudscraper,re,requests
 from bs4 import BeautifulSoup
 
 app = Flask(__name__)
 
 line_bot_api = LineBotApi(os.getenv("TOKEN"))
 handler = WebhookHandler(os.getenv("SECRET"))
+gpt_token = os.getenv("GPT")
 
 @app.route('/')
 def index():
@@ -83,6 +84,12 @@ def handle_message(event):
                 ))
             message = [TextSendMessage(text=event.message.text.split(' ')[1]+"的片喔 我找找"),carousel_template_message]
             line_bot_api.reply_message(event.reply_token,message)
+    else:
+        result = requests.post("https://api.openai.com/v1/chat/completions",data={"model": "gpt-3.5-turbo","messages": [{"role": "user", "content": event.message.text}]}
+                      ,headers={"Authorization":"Bearer {gpt_token}"})
+        message = [TextSendMessage(text=result.choices[0].message.content)]
+        line_bot_api.reply_message(event.reply_token,message)
+
 
 def createColums(dataList):
     print("createColums")
