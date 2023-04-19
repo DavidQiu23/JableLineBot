@@ -46,6 +46,7 @@ def callback():
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
     print("TextEven")
+    global history
     scraper = cloudscraper.create_scraper()
     if(event.message.text == "義旻我要最新的車"):
         response = scraper.get("https://jable.tv/latest-updates/")
