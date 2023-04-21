@@ -48,7 +48,7 @@ def handle_message(event):
     try:
         print("TextEven")
         global history
-        scraper = cloudscraper.create_scraper()
+        scraper = cloudscraper.create_scraper(disableCloudflareV1=True)
         if(event.message.text == "義旻我要最新的車"):
             response = scraper.get("https://jable.tv/latest-updates/")
             soup = BeautifulSoup(response.text, "html.parser")
