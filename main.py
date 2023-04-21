@@ -48,7 +48,7 @@ def handle_message(event):
     try:
         print("TextEven")
         global history
-        scraper = cloudscraper.create_scraper(interpreter='nodejs',disableCloudflareV1=True)
+        scraper = cloudscraper.create_scraper(disableCloudflareV1=True)
         if(event.message.text == "義旻我要最新的車"):
             response = scraper.get("https://jable.tv/latest-updates/")
             soup = BeautifulSoup(response.text, "html.parser")
@@ -62,7 +62,15 @@ def handle_message(event):
             message = [TextSendMessage(text="兄弟 記得要節制"),carousel_template_message]
             line_bot_api.reply_message(event.reply_token,message)
         elif(event.message.text == "義旻我要發燒列車"):
-            response = scraper.get("https://jable.tv/hot/")
+            response = scraper.get("https://jable.tv/hot/",headers={
+                "User-Agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/112.0",
+                "Connection":"keep-alive",
+                "Accept":"*/*",
+                "Accept-Language":"zh-TW,zh;q=0.8,en-US;q=0.5,en;q=0.3",
+                "Origin":"https://creative.xlivrdr.com",
+                "Referer":"https://creative.xlivrdr.com",
+                "Cookie":"_ga_1DTX7D4FHE=GS1.1.1682087266.13.1.1682090272.0.0.0; _ga=GA1.1.861318698.1678977505; PHPSESSID=9ngjcfrlv526tqld378rmr05kt; kt_ips=2001%3Ab011%3A2019%3Af9bf%3Ac120%3Ae2fb%3A2e3b%3Ab26f; __cf_bm=6DrO3zPlgw9gwxpLJuECJDgKd.vRpqgweQt.TeMFvhk-1682089885-0-ARlhg2vKgbzXSVlXgZlpjXoD+nb3ja9bFa/e5YiOqBJYKQwTySsxn/F00DIenrsYRoVMcdt6evJmBc/UVMgZOHPFwWlZzVCQIBEeQMcEj+rj+AofZd/DGJv5Fq0tia1BuoiBQNG7+Tv21qlcwOgzGJk="
+            })
             soup = BeautifulSoup(response.text, "html.parser")
             dataList = soup.find_all('div', attrs={'class':'video-img-box mb-e-20'},limit=10)
             
