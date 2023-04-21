@@ -45,58 +45,61 @@ def callback():
 
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
-    print("TextEven")
-    global history
-    scraper = cloudscraper.create_scraper()
-    if(event.message.text == "義旻我要最新的車"):
-        response = scraper.get("https://jable.tv/latest-updates/")
-        soup = BeautifulSoup(response.text, "html.parser")
-        dataList = soup.find_all('div', attrs={'class':'video-img-box mb-e-20'},limit=10)
-    
-        carousel_template_message = TemplateSendMessage(
-        alt_text='最新列車啟動~',
-        template=CarouselTemplate(
-            columns=createColums(dataList)
-        ))
-        message = [TextSendMessage(text="兄弟 記得要節制"),carousel_template_message]
-        line_bot_api.reply_message(event.reply_token,message)
-    elif(event.message.text == "義旻我要發燒列車"):
-        response = scraper.get("https://jable.tv/hot/")
-        soup = BeautifulSoup(response.text, "html.parser")
-        dataList = soup.find_all('div', attrs={'class':'video-img-box mb-e-20'},limit=10)
-        
-        carousel_template_message = TemplateSendMessage(
-        alt_text='發燒列車啟動~',
-        template=CarouselTemplate(
-            columns=createColums(dataList)
-        ))
-    
-        message = [TextSendMessage(text="老鐵 來了 這是你要的"),carousel_template_message]
-        line_bot_api.reply_message(event.reply_token,message)
-    elif(len(event.message.text.split(' ')) == 3):
-        if(event.message.text.split(' ')[0] == "義旻我要"):
-            response = scraper.get("https://jable.tv/search/"+event.message.text.split(' ')[1]+"/")
+    try:
+        print("TextEven")
+        global history
+        scraper = cloudscraper.create_scraper()
+        if(event.message.text == "義旻我要最新的車"):
+            response = scraper.get("https://jable.tv/latest-updates/")
             soup = BeautifulSoup(response.text, "html.parser")
             dataList = soup.find_all('div', attrs={'class':'video-img-box mb-e-20'},limit=10)
-
+        
             carousel_template_message = TemplateSendMessage(
-                alt_text=event.message.text.split(' ')[1]+'的片',
-                template=CarouselTemplate(
-                    columns=createColums(dataList)
-                ))
-            message = [TextSendMessage(text=event.message.text.split(' ')[1]+"的片喔 我找找"),carousel_template_message]
+            alt_text='最新列車啟動~',
+            template=CarouselTemplate(
+                columns=createColums(dataList)
+            ))
+            message = [TextSendMessage(text="兄弟 記得要節制"),carousel_template_message]
             line_bot_api.reply_message(event.reply_token,message)
-    elif(event.message.text == "清除記憶"):
-        history = []
-        message = [TextSendMessage(text="記憶已清除")]
-        line_bot_api.reply_message(event.reply_token,message)
-    else:
-        history.append({"role": "user", "content": event.message.text})
-        result = requests.post("https://api.openai.com/v1/chat/completions",json={"model": "gpt-3.5-turbo","messages": history},headers={"Authorization":"Bearer "+os.getenv("GPT")})
-        result = result.json()
-        history.append(result["choices"][0]["message"])
-        message = [TextSendMessage(text=result["choices"][0]["message"]["content"])]
-        line_bot_api.reply_message(event.reply_token,message)
+        elif(event.message.text == "義旻我要發燒列車"):
+            response = scraper.get("https://jable.tv/hot/")
+            soup = BeautifulSoup(response.text, "html.parser")
+            dataList = soup.find_all('div', attrs={'class':'video-img-box mb-e-20'},limit=10)
+            
+            carousel_template_message = TemplateSendMessage(
+            alt_text='發燒列車啟動~',
+            template=CarouselTemplate(
+                columns=createColums(dataList)
+            ))
+        
+            message = [TextSendMessage(text="老鐵 來了 這是你要的"),carousel_template_message]
+            line_bot_api.reply_message(event.reply_token,message)
+        elif(len(event.message.text.split(' ')) == 3):
+            if(event.message.text.split(' ')[0] == "義旻我要"):
+                response = scraper.get("https://jable.tv/search/"+event.message.text.split(' ')[1]+"/")
+                soup = BeautifulSoup(response.text, "html.parser")
+                dataList = soup.find_all('div', attrs={'class':'video-img-box mb-e-20'},limit=10)
+
+                carousel_template_message = TemplateSendMessage(
+                    alt_text=event.message.text.split(' ')[1]+'的片',
+                    template=CarouselTemplate(
+                        columns=createColums(dataList)
+                    ))
+                message = [TextSendMessage(text=event.message.text.split(' ')[1]+"的片喔 我找找"),carousel_template_message]
+                line_bot_api.reply_message(event.reply_token,message)
+        elif(event.message.text == "清除記憶"):
+            history = []
+            message = [TextSendMessage(text="記憶已清除")]
+            line_bot_api.reply_message(event.reply_token,message)
+        else:
+            history.append({"role": "user", "content": event.message.text})
+            result = requests.post("https://api.openai.com/v1/chat/completions",json={"model": "gpt-3.5-turbo","messages": history},headers={"Authorization":"Bearer "+os.getenv("GPT")})
+            result = result.json()
+            history.append(result["choices"][0]["message"])
+            message = [TextSendMessage(text=result["choices"][0]["message"]["content"])]
+            line_bot_api.reply_message(event.reply_token,message)
+    except Exception as e: 
+        print(e)
 
 
 def createColums(dataList):
