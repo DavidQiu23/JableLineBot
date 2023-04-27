@@ -13,7 +13,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 import os,cloudscraper,re,requests,undetected_chromedriver
 from bs4 import BeautifulSoup
 
-driverPath = ChromeDriverManager().install()
+driverPath = ChromeDriverManager(path="./").install()
 app = Flask(__name__)
 
 line_bot_api = LineBotApi(os.getenv("TOKEN"))
