@@ -5,3 +5,4 @@ requests-toolbelt
 cloudscraper
 requests
 undetected_chromedriver
+webdriver_manager
