@@ -10,7 +10,7 @@ from linebot.models import (
     MessageEvent, TextMessage, TextSendMessage,CarouselColumn,URIAction,TemplateSendMessage,CarouselTemplate
 )
 
-import os,cloudscraper,re,requests
+import os,cloudscraper,re,requests,undetected_chromedriver
 from bs4 import BeautifulSoup
 
 app = Flask(__name__)
@@ -47,10 +47,16 @@ def callback():
 def handle_message(event):
     print("TextEven")
     global history
-    scraper = cloudscraper.create_scraper()
+    #scraper = cloudscraper.create_scraper()
+    options = undetected_chromedriver.ChromeOptions()
+    options.add_argument( '--headless' )
+    driver = undetected_chromedriver.Chrome( options=options, headless=True, version_main=112) 
     if(event.message.text == "義旻我要最新的車"):
-        response = scraper.get("https://jable.tv/latest-updates/")
-        soup = BeautifulSoup(response.text, "html.parser")
+        # response = scraper.get("https://jable.tv/latest-updates/")
+        driver.get('https://jable.tv')
+        response = driver.page_source
+        #soup = BeautifulSoup(response.text, "html.parser")
+        soup = BeautifulSoup(response, "html.parser")
         dataList = soup.find_all('div', attrs={'class':'video-img-box mb-e-20'},limit=10)
     
         carousel_template_message = TemplateSendMessage(
