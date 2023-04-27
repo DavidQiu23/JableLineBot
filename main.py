@@ -13,7 +13,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 import os,cloudscraper,re,requests,undetected_chromedriver
 from bs4 import BeautifulSoup
 
-ChromeDriverManager(path = "./").install()
+driverPath = ChromeDriverManager(path = "./").install()
 app = Flask(__name__)
 
 line_bot_api = LineBotApi(os.getenv("TOKEN"))
@@ -48,10 +48,11 @@ def callback():
 def handle_message(event):
     print("TextEven")
     global history
+    global driverPath
     #scraper = cloudscraper.create_scraper(disableCloudflareV1=True)
     options = undetected_chromedriver.ChromeOptions()
     options.add_argument( '--headless' )
-    driver = undetected_chromedriver.Chrome( options=options, headless=True, version_main=112,driver_executable_path="./.wdm/drivers/chromedriver/win32/112.0.5615.49/chromedriver") 
+    driver = undetected_chromedriver.Chrome( options=options, headless=True, version_main=112,driver_executable_path=driverPath) 
     if(event.message.text == "義旻我要最新的車"):
         # response = scraper.get("https://jable.tv/latest-updates/")
         soup = BeautifulSoup(response.text, "html.parser")
