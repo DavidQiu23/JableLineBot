@@ -51,8 +51,9 @@ def handle_message(event):
     global driverPath
     #scraper = cloudscraper.create_scraper(disableCloudflareV1=True)
     options = undetected_chromedriver.ChromeOptions()
-    options.add_argument( '--headless' )
-    driver = undetected_chromedriver.Chrome( options=options, headless=True, version_main=112,driver_executable_path=driverPath) 
+    options.add_argument( '--disable-gpu' )
+    options.add_argument('--no-sandbox')
+    driver = undetected_chromedriver.Chrome( options=options, headless=True, version_main=112,driver_executable_path="/usr/bin/chromedriver") 
     if(event.message.text == "義旻我要最新的車"):
         # response = scraper.get("https://jable.tv/latest-updates/")
         soup = BeautifulSoup(response.text, "html.parser")
