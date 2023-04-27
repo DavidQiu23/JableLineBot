@@ -9,10 +9,11 @@ from linebot.exceptions import (
 from linebot.models import (
     MessageEvent, TextMessage, TextSendMessage,CarouselColumn,URIAction,TemplateSendMessage,CarouselTemplate
 )
-
+from webdriver_manager.chrome import ChromeDriverManager
 import os,cloudscraper,re,requests,undetected_chromedriver
 from bs4 import BeautifulSoup
 
+ChromeDriverManager().install()
 app = Flask(__name__)
 
 line_bot_api = LineBotApi(os.getenv("TOKEN"))
