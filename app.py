@@ -50,6 +50,8 @@ def handle_message(event):
     print("TextEven")
     global history
     global driverPath
+    options = undetected_chromedriver.ChromeOptions()
+    options.add_argument( '--headless' )
     driver = undetected_chromedriver.Chrome( options=options, headless=True, version_main=112,driver_executable_path=driverPath) 
     if(event.message.text == "義旻我要最新的車"):
         # response = scraper.get("https://jable.tv/latest-updates/")
