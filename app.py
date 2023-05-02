@@ -13,7 +13,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 import os,re,requests,undetected_chromedriver
 from bs4 import BeautifulSoup
 
-driverPath = ChromeDriverManager(path = "./").install()
+ChromeDriverManager().install()
 
 app = Flask(__name__)
 
@@ -50,7 +50,7 @@ def handle_message(event):
     print("TextEven")
     global history
     global driverPath
-    driver = undetected_chromedriver.Chrome(headless=True, version_main=112,driver_executable_path=driverPath) 
+    driver = undetected_chromedriver.Chrome(headless=True, version_main=112) 
     if(event.message.text == "義旻我要最新的車"):
         # response = scraper.get("https://jable.tv/latest-updates/")
         soup = BeautifulSoup(response.text, "html.parser")
