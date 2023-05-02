@@ -64,10 +64,10 @@ def handle_message(event):
         message = [TextSendMessage(text="兄弟 記得要節制"),carousel_template_message]
         line_bot_api.reply_message(event.reply_token,message)
     elif(event.message.text == "義旻我要發燒列車"):
-        response = driver.get('https://jable.tv').page_source
+        response = driver.get('https://jable.tv')
         # response = scraper.get('https://jable.tv').page_source
         # soup = BeautifulSoup(response.text, "html.parser")
-        soup = BeautifulSoup(response, "html.parser")
+        soup = BeautifulSoup(response.page_source, "html.parser")
         dataList = soup.find_all('div', attrs={'class':'video-img-box mb-e-20'},limit=10)
         
         carousel_template_message = TemplateSendMessage(
