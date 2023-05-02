@@ -10,10 +10,11 @@ from linebot.models import (
     MessageEvent, TextMessage, TextSendMessage,CarouselColumn,URIAction,TemplateSendMessage,CarouselTemplate
 )
 from webdriver_manager.chrome import ChromeDriverManager
-import os,cloudscraper,re,requests,undetected_chromedriver
+import os,re,requests,undetected_chromedriver
 from bs4 import BeautifulSoup
 
-driverPath = ChromeDriverManager(path="./").install()
+driverPath = ChromeDriverManager(path = "./").install()
+
 app = Flask(__name__)
 
 line_bot_api = LineBotApi(os.getenv("TOKEN"))
@@ -49,11 +50,7 @@ def handle_message(event):
     print("TextEven")
     global history
     global driverPath
-    #scraper = cloudscraper.create_scraper(disableCloudflareV1=True)
-    options = undetected_chromedriver.ChromeOptions()
-    options.add_argument( '--disable-gpu' )
-    options.add_argument('--no-sandbox')
-    driver = undetected_chromedriver.Chrome( options=options, headless=True, version_main=112,driver_executable_path="/usr/bin/chromedriver") 
+    driver = undetected_chromedriver.Chrome( options=options, headless=True, version_main=112,driver_executable_path=driverPath) 
     if(event.message.text == "義旻我要最新的車"):
         # response = scraper.get("https://jable.tv/latest-updates/")
         soup = BeautifulSoup(response.text, "html.parser")
@@ -68,6 +65,7 @@ def handle_message(event):
         line_bot_api.reply_message(event.reply_token,message)
     elif(event.message.text == "義旻我要發燒列車"):
         response = driver.get('https://jable.tv').page_source
+        # response = scraper.get('https://jable.tv').page_source
         # soup = BeautifulSoup(response.text, "html.parser")
         soup = BeautifulSoup(response, "html.parser")
         dataList = soup.find_all('div', attrs={'class':'video-img-box mb-e-20'},limit=10)
@@ -128,5 +126,5 @@ def createColums(dataList):
         ))
     return columns
 
-# if __name__ == "__main__":
-    # app.run(host='0.0.0.0',port=os.environ['PORT'])
+if __name__ == "__main__":
+    app.run(host='0.0.0.0',port=os.environ['PORT'],ssl_context='adhoc')

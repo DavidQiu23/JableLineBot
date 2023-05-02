@@ -1,8 +1,5 @@
 line-bot-sdk
 flask
 bs4
-requests-toolbelt
-cloudscraper
-requests
 undetected_chromedriver
 webdriver_manager
