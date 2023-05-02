@@ -50,9 +50,7 @@ def handle_message(event):
     print("TextEven")
     global history
     global driverPath
-    options = undetected_chromedriver.ChromeOptions()
-    options.add_argument( '--headless' )
-    driver = undetected_chromedriver.Chrome( options=options, headless=True, version_main=112,driver_executable_path=driverPath) 
+    driver = undetected_chromedriver.Chrome(headless=True, version_main=112,driver_executable_path=driverPath) 
     if(event.message.text == "義旻我要最新的車"):
         # response = scraper.get("https://jable.tv/latest-updates/")
         soup = BeautifulSoup(response.text, "html.parser")
@@ -129,4 +127,4 @@ def createColums(dataList):
     return columns
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0',port=os.environ['PORT'])
+    app.run()
