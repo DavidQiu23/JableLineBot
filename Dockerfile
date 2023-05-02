@@ -9,6 +9,7 @@ COPY requirements.txt requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 # Install Chrome
 # We need wget to set up the PPA and xvfb to have a virtual screen and unzip to install the Chromedriver
+RUN apt-get update
 RUN apt-get install -y wget xvfb unzip
 
 # Set up the Chrome PPA
