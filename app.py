@@ -106,11 +106,12 @@ def handle_message(event, flush=True):
             history.append({"role": "user", "content": event.message.text})
             result = requests.post("https://api.openai.com/v1/chat/completions",json={"model": "gpt-3.5-turbo","messages": history},headers={"Authorization":"Bearer "+os.getenv("GPT")})
             result = result.json()
+            print(result,flush=True)
             history.append(result["choices"][0]["message"])
             message = [TextSendMessage(text=result["choices"][0]["message"]["content"])]
             line_bot_api.reply_message(event.reply_token,message)
     except Exception as e:
-        line_bot_api.reply_message(event.reply_token,[TextSendMessage(text=str(e))])
+        print(e,flush=True)
     
 
 def createColums(dataList):
