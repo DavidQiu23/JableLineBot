@@ -13,7 +13,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 import os,re,requests,undetected_chromedriver
 from bs4 import BeautifulSoup
 
-ChromeDriverManager().install()
+driverPath = ChromeDriverManager(path="./").install()
 
 app = Flask(__name__)
 
@@ -51,11 +51,12 @@ def handle_message(event):
     global history
     global driverPath
     options = undetected_chromedriver.ChromeOptions()
+    options.add_argument( '--headless' )
     options.add_argument( '--no-sandbox' )
     options.add_argument("--disable-dev-shm-usage")
     options.add_argument("--start-maximized")
     options.add_argument('--disable-popup-blocking')
-    driver = undetected_chromedriver.Chrome(options=options,headless=True, version_main=113) 
+    driver = undetected_chromedriver.Chrome(options=options,headless=True, version_main=113,driver_executable_path=driverPath) 
     if(event.message.text == "義旻我要最新的車"):
         # response = scraper.get("https://jable.tv/latest-updates/")
         soup = BeautifulSoup(response.text, "html.parser")
