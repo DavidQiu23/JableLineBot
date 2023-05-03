@@ -110,7 +110,7 @@ def handle_message(event):
             message = [TextSendMessage(text=result["choices"][0]["message"]["content"])]
             line_bot_api.reply_message(event.reply_token,message)
     except Exception as e:
-        line_bot_api.reply_message(event.reply_token,[TextSendMessage(text=e)])
+        line_bot_api.reply_message(event.reply_token,[TextSendMessage(text=str(e))])
     
 
 def createColums(dataList):
