@@ -55,7 +55,7 @@ def handle_message(event):
     options.add_argument("--disable-dev-shm-usage")
     options.add_argument("--start-maximized")
     options.add_argument('--disable-popup-blocking')
-    driver = undetected_chromedriver.Chrome(options=options,headless=True, version_main=112) 
+    driver = undetected_chromedriver.Chrome(options=options,headless=True, version_main=113) 
     if(event.message.text == "義旻我要最新的車"):
         # response = scraper.get("https://jable.tv/latest-updates/")
         soup = BeautifulSoup(response.text, "html.parser")
