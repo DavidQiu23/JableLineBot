@@ -58,8 +58,8 @@ def handle_message(event):
     options.add_argument('--disable-popup-blocking')
     driver = undetected_chromedriver.Chrome(options=options,headless=True, version_main=113,driver_executable_path=driverPath) 
     if(event.message.text == "義旻我要最新的車"):
-        # response = scraper.get("https://jable.tv/latest-updates/")
-        soup = BeautifulSoup(response.text, "html.parser")
+        driver.get("https://jable.tv/latest-updates/")
+        soup = BeautifulSoup(driver.page_source, "html.parser")
         dataList = soup.find_all('div', attrs={'class':'video-img-box mb-e-20'},limit=10)
     
         carousel_template_message = TemplateSendMessage(
@@ -71,9 +71,6 @@ def handle_message(event):
         line_bot_api.reply_message(event.reply_token,message)
     elif(event.message.text == "義旻我要發燒列車"):
         driver.get('https://jable.tv/hot/')
-        # response = scraper.get('https://jable.tv').page_source
-        # soup = BeautifulSoup(response.text, "html.parser")
-
         soup = BeautifulSoup(driver.page_source, "html.parser")
         dataList = soup.find_all('div', attrs={'class':'video-img-box mb-e-20'},limit=10)
         
@@ -87,8 +84,8 @@ def handle_message(event):
         line_bot_api.reply_message(event.reply_token,message)
     elif(len(event.message.text.split(' ')) == 3):
         if(event.message.text.split(' ')[0] == "義旻我要"):
-            # response = scraper.get("https://jable.tv/search/"+event.message.text.split(' ')[1]+"/")
-            soup = BeautifulSoup(response.text, "html.parser")
+            driver.get("https://jable.tv/search/"+event.message.text.split(' ')[1]+"/")
+            soup = BeautifulSoup(driver.page_source, "html.parser")
             dataList = soup.find_all('div', attrs={'class':'video-img-box mb-e-20'},limit=10)
 
             carousel_template_message = TemplateSendMessage(
