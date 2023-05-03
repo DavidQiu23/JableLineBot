@@ -52,6 +52,9 @@ def handle_message(event):
     global driverPath
     options = undetected_chromedriver.ChromeOptions()
     options.add_argument( '--no-sandbox' )
+    options.add_argument("--disable-dev-shm-usage")
+    options.add_argument("--start-maximized")
+    options.add_argument('--disable-popup-blocking')
     driver = undetected_chromedriver.Chrome(options=options,headless=True, version_main=112) 
     if(event.message.text == "義旻我要最新的車"):
         # response = scraper.get("https://jable.tv/latest-updates/")
