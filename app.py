@@ -46,17 +46,17 @@ def callback():
     try:
         handler.handle(body, signature)
     except InvalidSignatureError:
-        print("Invalid signature. Please check your channel access token/channel secret.")
+        print("Invalid signature. Please check your channel access token/channel secret.", flush=True)
         abort(400)
 
     return 'OK'
 
 
 @handler.add(MessageEvent, message=TextMessage)
-def handle_message(event):
+def handle_message(event, flush=True):
     try:
         
-        print("TextEven")
+        print("TextEven", flush=True)
         global history
         global driver
         
@@ -114,7 +114,7 @@ def handle_message(event):
     
 
 def createColums(dataList):
-    print("createColums")
+    print("createColums", flush=True)
     columns = []
     for item in dataList:
         imgbox = item.find('div', attrs={'class':'img-box cover-md'})

@@ -38,4 +38,4 @@ COPY . .
 EXPOSE 80
 
 # Command to start the server
-CMD ["python" ,"-u", "flask", "run", "--host=0.0.0.0"]
+CMD ["python" ,"-m", "flask", "run", "--host=0.0.0.0"]
