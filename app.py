@@ -78,7 +78,10 @@ def handle_message(event, flush=True):
                     columns=createColums(dataList)
                 ))
                 message = [TextMessage(text="兄弟 記得要節制"),carousel_template_message]
-                line_bot_api.reply_message(event.reply_token,message)
+                line_bot_api.reply_message(ReplyMessageRequest(
+                    reply_token=event.reply_token,
+                    messages=message
+                ))
             elif(text == "義旻我要發燒列車"):
                 driver.get('https://jable.tv/hot/')
                 soup = BeautifulSoup(driver.page_source, "html.parser")
@@ -91,7 +94,10 @@ def handle_message(event, flush=True):
                 ))
             
                 message = [TextMessage(text="老鐵 來了 這是你要的"),carousel_template_message]
-                line_bot_api.reply_message(event.reply_token,message)
+                line_bot_api.reply_message(ReplyMessageRequest(
+                    reply_token=event.reply_token,
+                    messages=message
+                ))
             elif(len(text.split(' ')) == 3):
                 if(text.split(' ')[0] == "義旻我要"):
                     driver.get("https://jable.tv/search/"+text.split(' ')[1]+"/")
@@ -104,11 +110,17 @@ def handle_message(event, flush=True):
                             columns=createColums(dataList)
                         ))
                     message = [TextMessage(text=text.split(' ')[1]+"的片喔 我找找"),carousel_template_message]
-                    line_bot_api.reply_message(event.reply_token,message)
+                    line_bot_api.reply_message(ReplyMessageRequest(
+                        reply_token=event.reply_token,
+                        messages=message
+                    ))
             elif(text == "清除記憶"):
                 history = []
                 message = [TextMessage(text="記憶已清除")]
-                line_bot_api.reply_message(event.reply_token,message)
+                line_bot_api.reply_message(ReplyMessageRequest(
+                    reply_token=event.reply_token,
+                    messages=message
+                ))
             else:
                 history.append({"role": "user", "content": text})
                 result = requests.post("https://api.openai.com/v1/chat/completions",json={"model": "gpt-3.5-turbo","messages": history},headers={"Authorization":"Bearer "+os.getenv("GPT")})
@@ -116,7 +128,10 @@ def handle_message(event, flush=True):
                 print(result,flush=True)
                 history.append(result["choices"][0]["message"])
                 message = [TextMessage(text=result["choices"][0]["message"]["content"])]
-                line_bot_api.reply_message(event.reply_token,message)
+                line_bot_api.reply_message(ReplyMessageRequest(
+                    reply_token=event.reply_token,
+                    messages=message
+                ))
     except Exception as e:
         print(e,flush=True)
     
