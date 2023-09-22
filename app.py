@@ -70,7 +70,7 @@ def handle_message(event, flush=True):
             if(text == "義旻我要最新的車"):
                 driver.get("https://jable.tv/latest-updates/")
                 soup = BeautifulSoup(driver.page_source, "html.parser")
-                dataList = soup.find_all('div', attrs={'class':'video-img-box mb-e-20'},limit=10)
+                dataList = soup.find_all('div', class_='video-img-box mb-e-20',limit=10)
             
                 carousel_template_message = TemplateMessage(
                 alt_text='最新列車啟動~',
@@ -86,7 +86,7 @@ def handle_message(event, flush=True):
                 driver.get('https://jable.tv/hot/')
                 print(driver.page_source,flush=True)
                 soup = BeautifulSoup(driver.page_source, "html.parser")
-                dataList = soup.find_all('div', attrs={'class':'video-img-box mb-e-20'},limit=10)
+                dataList = soup.find_all('div', class_='video-img-box mb-e-20',limit=10)
                 print(dataList,flush=True)
                 carousel_template_message = TemplateMessage(
                 alt_text='發燒列車啟動~',
@@ -103,7 +103,7 @@ def handle_message(event, flush=True):
                 if(text.split(' ')[0] == "義旻我要"):
                     driver.get("https://jable.tv/search/"+text.split(' ')[1]+"/")
                     soup = BeautifulSoup(driver.page_source, "html.parser")
-                    dataList = soup.find_all('div', attrs={'class':'video-img-box mb-e-20'},limit=10)
+                    dataList = soup.find_all('div', class_='video-img-box mb-e-20',limit=10)
 
                     carousel_template_message = TemplateMessage(
                         alt_text=text.split(' ')[1]+'的片',
@@ -141,8 +141,8 @@ def createColums(dataList):
     print("createColums", flush=True)
     columns = []
     for item in dataList:
-        imgbox = item.find('div', attrs={'class':'img-box cover-md'})
-        detail = item.find('div', attrs={'class':'detail'})
+        imgbox = item.find('div', class_='img-box cover-md')
+        detail = item.find('div', class_='detail')
         text = re.match("([A-Za-z]+-\d+)(.+)",detail.select_one('a').getText()).group(2)
         if(len(text)>60):
             text = text[:56]+"...."
