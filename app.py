@@ -156,6 +156,7 @@ def createColums(dataList):
                     )
                 ]
         ))
+    print(len(columns), flush=True)
     return columns
 
 if __name__ == "__main__":
