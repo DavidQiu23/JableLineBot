@@ -17,7 +17,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 import os,re,requests,undetected_chromedriver
 from bs4 import BeautifulSoup
 
-driverPath = ChromeDriverManager(path="./chromedriver").install()
+driverPath = ChromeDriverManager().install()
 options = undetected_chromedriver.ChromeOptions()
 options.add_argument( '--headless' )
 options.add_argument( '--no-sandbox' )
