@@ -84,9 +84,10 @@ def handle_message(event, flush=True):
                 ))
             elif(text == "義旻我要發燒列車"):
                 driver.get('https://jable.tv/hot/')
+                print(driver.page_source,flush=True)
                 soup = BeautifulSoup(driver.page_source, "html.parser")
                 dataList = soup.find_all('div', attrs={'class':'video-img-box mb-e-20'},limit=10)
-                
+                print(dataList,flush=True)
                 carousel_template_message = TemplateMessage(
                 alt_text='發燒列車啟動~',
                 template=CarouselTemplate(
