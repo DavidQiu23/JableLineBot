@@ -24,13 +24,11 @@ configuration = Configuration(access_token=os.getenv("LINE_TOKEN"))
 handler = WebhookHandler(os.getenv("LINE_SECRET"))
 service = Service("/usr/lib/chromium-browser/chromedriver")
 options = Options()
-options.add_argument
 options.add_argument('--no-sandbox')
 options.add_argument('--disable-dev-shm-usage')
 options.add_argument('--disable-extensions')
 options.add_argument('--headless')
 options.add_argument("user-agent=Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.125 Safari/537.36")
-driver = webdriver.Chrome(service=service,options=options)
 
 @app.route('/')
 def index():
@@ -60,56 +58,72 @@ def handle_message(event):
     try:
         text = event.message.text
         print("TextEven", flush=True)
-        global driver
-        
+        driver = webdriver.Chrome(service=service,options=options)
         with ApiClient(configuration) as api_client:
             line_bot_api = MessagingApi(api_client)
             if(text == "義旻我要最新的車"):
                 driver.get("https://jable.tv/latest-updates/")
                 soup = BeautifulSoup(driver.page_source, "html.parser")
                 dataList = soup.find_all('div', class_='video-img-box mb-e-20',limit=10)
-            
-                carousel_template_message = TemplateMessage(
-                alt_text='最新列車啟動~',
-                template=CarouselTemplate(
-                    columns=createColums(dataList)
-                ))
-                message = [TextMessage(text="兄弟 記得要節制"),carousel_template_message]
-                line_bot_api.reply_message(ReplyMessageRequest(
-                    reply_token=event.reply_token,
-                    messages=message
-                ))
+                if(len(dataList) == 0):
+                    line_bot_api.reply_message(ReplyMessageRequest(
+                        reply_token=event.reply_token,
+                        messages=[TextMessage(text="被J站當機機人擋起來了QQ")]
+                    ))
+                else:
+                    carousel_template_message = TemplateMessage(
+                    alt_text='最新列車啟動~',
+                    template=CarouselTemplate(
+                        columns=createColums(dataList)
+                    ))
+                    message = [TextMessage(text="兄弟 記得要節制"),carousel_template_message]
+                    line_bot_api.reply_message(ReplyMessageRequest(
+                        reply_token=event.reply_token,
+                        messages=message
+                    ))
             elif(text == "義旻我要發燒列車"):
                 driver.get('https://jable.tv/hot/')
                 soup = BeautifulSoup(driver.page_source, "html.parser")
                 dataList = soup.find_all('div', class_='video-img-box mb-e-20',limit=10)
-                carousel_template_message = TemplateMessage(
-                alt_text='發燒列車啟動~',
-                template=CarouselTemplate(
-                    columns=createColums(dataList)
-                ))
-            
-                message = [TextMessage(text="老鐵 來了 這是你要的"),carousel_template_message]
-                line_bot_api.reply_message(ReplyMessageRequest(
-                    reply_token=event.reply_token,
-                    messages=message
-                ))
+                if(len(dataList) == 0):
+                    line_bot_api.reply_message(ReplyMessageRequest(
+                        reply_token=event.reply_token,
+                        messages=[TextMessage(text="被J站當機機人擋起來了QQ")]
+                    ))
+                else:
+                    carousel_template_message = TemplateMessage(
+                    alt_text='發燒列車啟動~',
+                    template=CarouselTemplate(
+                        columns=createColums(dataList)
+                    ))
+                
+                    message = [TextMessage(text="老鐵 來了 這是你要的"),carousel_template_message]
+                    line_bot_api.reply_message(ReplyMessageRequest(
+                        reply_token=event.reply_token,
+                        messages=message
+                    ))
             elif(len(text.split(' ')) == 3):
                 if(text.split(' ')[0] == "義旻我要"):
                     driver.get("https://jable.tv/search/"+text.split(' ')[1]+"/")
                     soup = BeautifulSoup(driver.page_source, "html.parser")
                     dataList = soup.find_all('div', class_='video-img-box mb-e-20',limit=10)
-
-                    carousel_template_message = TemplateMessage(
-                        alt_text=text.split(' ')[1]+'的片',
-                        template=CarouselTemplate(
-                            columns=createColums(dataList)
+                    if(len(dataList) == 0):
+                        line_bot_api.reply_message(ReplyMessageRequest(
+                            reply_token=event.reply_token,
+                            messages=[TextMessage(text="被J站當機機人擋起來了QQ")]
                         ))
-                    message = [TextMessage(text=text.split(' ')[1]+"的片喔 我找找"),carousel_template_message]
-                    line_bot_api.reply_message(ReplyMessageRequest(
-                        reply_token=event.reply_token,
-                        messages=message
-                    ))
+                    else:
+                        carousel_template_message = TemplateMessage(
+                            alt_text=text.split(' ')[1]+'的片',
+                            template=CarouselTemplate(
+                                columns=createColums(dataList)
+                            ))
+                        message = [TextMessage(text=text.split(' ')[1]+"的片喔 我找找"),carousel_template_message]
+                        line_bot_api.reply_message(ReplyMessageRequest(
+                            reply_token=event.reply_token,
+                            messages=message
+                        ))
+        driver.quit()
     except Exception as e:
         print(e,flush=True)
     

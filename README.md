@@ -6,7 +6,7 @@
 - ~~除此之外以chatGPT回覆~~ chatGPT API 免費試用期已過
 
 ## 筆記
-
+### 無頭模式並且指定user-agent並且每次呼叫就重新開啟一次driver，才能騙過cloudflare
 ### Ngnix
 ```
 sudo apt-get install nginx  --安裝
