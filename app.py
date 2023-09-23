@@ -30,7 +30,7 @@ options.add_argument('--enable-javascript')
 options.add_argument('--disable-gpu')
 options.add_argument('--disable-dev-shm-usage')
 options.add_argument('--disable-extensions')
-options.add_argument('User-Agent='+uuid.uuid1())
+options.add_argument('User-Agent='+str(uuid.uuid1()))
 driver = uc.Chrome(options=options,version_main=117)
 
 @app.route('/')
