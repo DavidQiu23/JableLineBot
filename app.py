@@ -24,11 +24,13 @@ configuration = Configuration(access_token=os.getenv("TOKEN"))
 handler = WebhookHandler(os.getenv("SECRET"))
 
 options = Options()
-options.add_argument("start-maximized")
 options.add_argument('--no-sandbox')
+options.add_argument('--headless')
+options.add_argument('--enable-javascript')
+options.add_argument('--disable-gpu')
 options.add_argument('--disable-dev-shm-usage')
 options.add_argument('--disable-extensions')
-driver = uc.Chrome(options=options)
+driver = uc.Chrome(options=options,version_main=117)
 
 @app.route('/')
 def index():
