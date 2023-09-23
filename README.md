@@ -1,4 +1,4 @@
-## 指令 (無法跳過jable機器人偵測)
+## 指令
 
 - 義旻我要發燒列車
 - 義旻我要最新的車
@@ -7,6 +7,26 @@
 
 ## 筆記
 
-- 目前架設在Render雲端平台，使用Docker服務
-- Docker建置python環境並且下載安裝chrome
-- 使用`webdriver_manager`套件下載chrome驅動，給`undetected_chromedriver`使用，`undetected_chromedriver`的設定版本要112以上並且開啟無頭模式
+### Ngnix
+`sudo apt-get install nginx  --安裝`
+`sudo service nginx restart  --重啟指令`
+/etc/nginx/sites-available/default
+```
+location / {
+    proxy_set_header     X-Forwarded-Host $host;
+    proxy_set_header     X-Forwarded-Server $host;
+    proxy_set_header     X-Real-IP $remote_addr;
+    proxy_set_header     Host $host;
+    proxy_set_header     X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_pass           http://127.0.0.1:5000;
+}
+```
+### SSL
+```
+$ apt-get update
+$ sudo apt-get install certbot
+$ apt-get install python3-certbot-nginx
+```
+- No-IP (https://davidqiu.ddns.net/)
+- 目前架設在樹莓派，使用ngnix,uWSGI
+- 啟動指令 `uwsgi --ini uwsgi.ini`

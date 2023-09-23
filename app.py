@@ -1,4 +1,7 @@
 from flask import Flask, request, abort
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.chrome.service import Service
 from linebot.v3 import (
     WebhookHandler
 )
@@ -12,26 +15,22 @@ from linebot.v3.messaging import(
     Configuration,ApiClient,MessagingApi,TextMessage, ReplyMessageRequest,CarouselColumn,URIAction,TemplateMessage,CarouselTemplate
 )
 from bs4 import BeautifulSoup
-import os,re,uuid
-import undetected_chromedriver as uc
-#from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
+import os,re
 
 
 app = Flask(__name__)
 
-configuration = Configuration(access_token=os.getenv("TOKEN"))
-handler = WebhookHandler(os.getenv("SECRET"))
-
-options = uc.ChromeOptions()
+configuration = Configuration(access_token=os.getenv("LINE_TOKEN"))
+handler = WebhookHandler(os.getenv("LINE_SECRET"))
+service = Service("/usr/lib/chromium-browser/chromedriver")
+options = Options()
+options.add_argument
 options.add_argument('--no-sandbox')
-options.add_argument('--headless')
-options.add_argument('--enable-javascript')
-options.add_argument('--disable-gpu')
 options.add_argument('--disable-dev-shm-usage')
 options.add_argument('--disable-extensions')
-options.add_argument('User-Agent='+str(uuid.uuid1()))
-driver = uc.Chrome(options=options,version_main=117)
+options.add_argument('--headless')
+options.add_argument("user-agent=Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.125 Safari/537.36")
+driver = webdriver.Chrome(service=service,options=options)
 
 @app.route('/')
 def index():
@@ -57,7 +56,7 @@ def callback():
 
 
 @handler.add(MessageEvent, message=TextMessageContent)
-def handle_message(event, flush=True):
+def handle_message(event):
     try:
         text = event.message.text
         print("TextEven", flush=True)
@@ -82,10 +81,8 @@ def handle_message(event, flush=True):
                 ))
             elif(text == "義旻我要發燒列車"):
                 driver.get('https://jable.tv/hot/')
-                print(driver.page_source,flush=True)
                 soup = BeautifulSoup(driver.page_source, "html.parser")
                 dataList = soup.find_all('div', class_='video-img-box mb-e-20',limit=10)
-                print(dataList,flush=True)
                 carousel_template_message = TemplateMessage(
                 alt_text='發燒列車啟動~',
                 template=CarouselTemplate(
