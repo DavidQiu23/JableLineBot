@@ -18,7 +18,13 @@ import os,re,requests,undetected_chromedriver
 from bs4 import BeautifulSoup
 
 driverPath = ChromeDriverManager().install()
-driver = undetected_chromedriver.Chrome(headless=True,driver_executable_path=driverPath) 
+options = undetected_chromedriver.ChromeOptions()
+options.add_argument( '--headless' )
+options.add_argument( '--no-sandbox' )
+options.add_argument("--disable-dev-shm-usage")
+options.add_argument("--start-maximized")
+options.add_argument('--disable-popup-blocking')
+driver = undetected_chromedriver.Chrome(options=options,headless=True, version_main=114,driver_executable_path=driverPath)
 
 app = Flask(__name__)
 
