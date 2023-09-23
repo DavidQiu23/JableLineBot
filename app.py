@@ -19,8 +19,11 @@ from bs4 import BeautifulSoup
 
 driverPath = ChromeDriverManager().install()
 driver = undetected_chromedriver.Chrome(
+    headless=True,
     version_main=114,
     driver_executable_path=driverPath,
+    suppress_welcome=False,
+    use_subprocess=False
 )
 
 
