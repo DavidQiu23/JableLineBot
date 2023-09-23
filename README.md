@@ -8,9 +8,11 @@
 ## 筆記
 
 ### Ngnix
-`sudo apt-get install nginx  --安裝`
-`sudo service nginx restart  --重啟指令`
-/etc/nginx/sites-available/default
+```
+sudo apt-get install nginx  --安裝
+sudo service nginx restart  --重啟指令
+```
+設定位置：/etc/nginx/sites-available/default
 ```
 location / {
     proxy_set_header     X-Forwarded-Host $host;
