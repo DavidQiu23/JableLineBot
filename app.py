@@ -24,7 +24,6 @@ configuration = Configuration(access_token=os.getenv("TOKEN"))
 handler = WebhookHandler(os.getenv("SECRET"))
 
 options = Options()
-options.add_argument
 options.add_argument('--no-sandbox')
 options.add_argument('--disable-dev-shm-usage')
 options.add_argument('--disable-extensions')
