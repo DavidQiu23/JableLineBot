@@ -14,7 +14,7 @@ from linebot.v3.messaging import(
 from bs4 import BeautifulSoup
 import os,re
 import undetected_chromedriver as uc
-from selenium import webdriver
+#from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 
 
@@ -23,7 +23,7 @@ app = Flask(__name__)
 configuration = Configuration(access_token=os.getenv("TOKEN"))
 handler = WebhookHandler(os.getenv("SECRET"))
 
-options = webdriver.ChromeOptions()
+options = Options()
 options.add_argument("start-maximized")
 options.add_experimental_option("excludeSwitches", ["enable-automation"])
 options.add_experimental_option('useAutomationExtension', False)
