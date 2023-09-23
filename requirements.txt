@@ -1,6 +1,5 @@
 line-bot-sdk
 flask
 bs4
-undetected_chromedriver
-webdriver_manager
+selenium
 gunicorn

@@ -1,5 +1,4 @@
 from flask import Flask, request, abort
-
 from linebot.v3 import (
     WebhookHandler
 )
@@ -12,28 +11,26 @@ from linebot.v3.webhooks import (
 from linebot.v3.messaging import(
     Configuration,ApiClient,MessagingApi,TextMessage, ReplyMessageRequest,CarouselColumn,URIAction,TemplateMessage,CarouselTemplate
 )
-
-from webdriver_manager.chrome import ChromeDriverManager
-import os,re,requests,undetected_chromedriver
+import os,re
 from bs4 import BeautifulSoup
-
-driverPath = ChromeDriverManager().install()
-driver = undetected_chromedriver.Chrome(
-    headless=True,
-    version_main=114,
-    driver_executable_path=driverPath,
-    suppress_welcome=False,
-    use_subprocess=False
-)
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.chrome.service import Service
 
 
 app = Flask(__name__)
 
 configuration = Configuration(access_token=os.getenv("TOKEN"))
-#line_bot_api = LineBotApi(os.getenv("TOKEN"))
 handler = WebhookHandler(os.getenv("SECRET"))
 
-history = []
+options = Options()
+options.add_argument
+options.add_argument('--no-sandbox')
+options.add_argument('--disable-dev-shm-usage')
+options.add_argument('--disable-extensions')
+options.add_argument('--headless')
+options.add_argument("user-agent=Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.125 Safari/537.36")
+driver = webdriver.Chrome(options=options)
 
 @app.route('/')
 def index():
@@ -63,7 +60,6 @@ def handle_message(event, flush=True):
     try:
         text = event.message.text
         print("TextEven", flush=True)
-        global history
         global driver
         
         with ApiClient(configuration) as api_client:
@@ -116,28 +112,9 @@ def handle_message(event, flush=True):
                         reply_token=event.reply_token,
                         messages=message
                     ))
-            elif(text == "清除記憶"):
-                history = []
-                message = [TextMessage(text="記憶已清除")]
-                line_bot_api.reply_message(ReplyMessageRequest(
-                    reply_token=event.reply_token,
-                    messages=message
-                ))
-            else:
-                history.append({"role": "user", "content": text})
-                result = requests.post("https://api.openai.com/v1/chat/completions",json={"model": "gpt-3.5-turbo","messages": history},headers={"Authorization":"Bearer "+os.getenv("GPT")})
-                result = result.json()
-                print(result,flush=True)
-                history.append(result["choices"][0]["message"])
-                message = [TextMessage(text=result["choices"][0]["message"]["content"])]
-                line_bot_api.reply_message(ReplyMessageRequest(
-                    reply_token=event.reply_token,
-                    messages=message
-                ))
     except Exception as e:
         print(e,flush=True)
     
-
 def createColums(dataList):
     print("createColums", flush=True)
     columns = []
@@ -158,7 +135,6 @@ def createColums(dataList):
                     )
                 ]
         ))
-    print(len(columns), flush=True)
     return columns
 
 if __name__ == "__main__":
