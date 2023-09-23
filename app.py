@@ -11,11 +11,11 @@ from linebot.v3.webhooks import (
 from linebot.v3.messaging import(
     Configuration,ApiClient,MessagingApi,TextMessage, ReplyMessageRequest,CarouselColumn,URIAction,TemplateMessage,CarouselTemplate
 )
-import os,re
 from bs4 import BeautifulSoup
+import os,re
+import undetected_chromedriver as uc
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.chrome.service import Service
 
 
 app = Flask(__name__)
@@ -23,13 +23,15 @@ app = Flask(__name__)
 configuration = Configuration(access_token=os.getenv("TOKEN"))
 handler = WebhookHandler(os.getenv("SECRET"))
 
-options = Options()
+options = webdriver.ChromeOptions()
+options.add_argument("start-maximized")
+options.add_experimental_option("excludeSwitches", ["enable-automation"])
+options.add_experimental_option('useAutomationExtension', False)
 options.add_argument('--no-sandbox')
 options.add_argument('--disable-dev-shm-usage')
 options.add_argument('--disable-extensions')
 options.add_argument('--headless')
-options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/117.0")
-driver = webdriver.Chrome(options=options)
+driver = uc.Chrome(options=options)
 
 @app.route('/')
 def index():
