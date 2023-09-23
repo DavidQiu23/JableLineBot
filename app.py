@@ -12,7 +12,7 @@ from linebot.v3.messaging import(
     Configuration,ApiClient,MessagingApi,TextMessage, ReplyMessageRequest,CarouselColumn,URIAction,TemplateMessage,CarouselTemplate
 )
 from bs4 import BeautifulSoup
-import os,re
+import os,re,uuid
 import undetected_chromedriver as uc
 #from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
@@ -23,13 +23,14 @@ app = Flask(__name__)
 configuration = Configuration(access_token=os.getenv("TOKEN"))
 handler = WebhookHandler(os.getenv("SECRET"))
 
-options = Options()
+options = uc.ChromeOptions()
 options.add_argument('--no-sandbox')
 options.add_argument('--headless')
 options.add_argument('--enable-javascript')
 options.add_argument('--disable-gpu')
 options.add_argument('--disable-dev-shm-usage')
 options.add_argument('--disable-extensions')
+options.add_argument('User-Agent='+uuid.uuid1())
 driver = uc.Chrome(options=options,version_main=117)
 
 @app.route('/')
