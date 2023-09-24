@@ -28,6 +28,8 @@ location / {
 $ apt-get update
 $ sudo apt-get install certbot
 $ apt-get install python3-certbot-nginx
+$ sudo certbot --nginx
+$ sudo certbot renew --dry-run #測試是否還有效 移除--dry-run就可以更新憑證
 ```
 - No-IP (https://davidqiu.ddns.net/)
 - 目前架設在樹莓派，使用ngnix,uWSGI
