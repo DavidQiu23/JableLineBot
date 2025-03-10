@@ -15,14 +15,15 @@ from linebot.v3.messaging import(
     Configuration,ApiClient,MessagingApi,TextMessage, ReplyMessageRequest,CarouselColumn,URIAction,TemplateMessage,CarouselTemplate
 )
 from bs4 import BeautifulSoup
-import os,re
+import os,re,requests,json
 
 
 app = Flask(__name__)
 
+geminiKey = os.getenv("GEMINI_KEY")
 configuration = Configuration(access_token=os.getenv("LINE_TOKEN"))
 handler = WebhookHandler(os.getenv("LINE_SECRET"))
-service = Service("/usr/lib/chromium-browser/chromedriver")
+service = Service("/usr/bin/chromedriver")
 options = Options()
 options.add_argument('--no-sandbox')
 options.add_argument('--disable-dev-shm-usage')
@@ -123,6 +124,28 @@ def handle_message(event):
                             reply_token=event.reply_token,
                             messages=message
                         ))
+            else:
+                url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key='+geminiKey
+                payload={
+                    'contents': [{
+                                    'role': "user",
+                                    'parts': [{
+                                        'text': text
+                                    }]
+                                }],
+                    'tools': [
+                        {
+                            "google_search": {}
+                        }
+                    ]
+                }
+                res = requests.post(url,json=payload)
+                resJson = json.loads(res.text)
+                message = [TextMessage(text=resJson["candidates"][0]["content"]["parts"][0]["text"])]
+                line_bot_api.reply_message(ReplyMessageRequest(
+                    reply_token=event.reply_token,
+                    messages=message
+                ))
         driver.quit()
     except Exception as e:
         print(e,flush=True)
